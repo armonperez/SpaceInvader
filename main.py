@@ -2,6 +2,8 @@ import pygame
 import random
 import math
 
+from pygame import mixer # sounds and music
+
 #game file is the vertual machine 
 
 #game window
@@ -16,6 +18,14 @@ screen = pygame.display.set_mode((800, 600)) #(width, height)
 background = pygame.image.load("hubble-ngc5248-potw2441a.png.webp")
 DEFAULT_IMAGE_SIZE = (800,600)
 background = pygame.transform.scale(background, DEFAULT_IMAGE_SIZE)
+
+
+
+#background sound
+mixer.music.load("background.wav")
+mixer.music.play(-1)
+
+
 
 #Title and Icon of window
 pygame.display.set_caption("Space Invaders")
@@ -134,8 +144,12 @@ while running:
                 playerX_change = 3
             if event.key == pygame.K_SPACE:
                 if bullet_state is "ready":
-                    bulletX = playerX
-                    fire_bullet(bulletX, bulletY)
+                   bullet_sound = mixer.Sound("laser.wav")
+                   bullet_sound.play()
+
+                   #get correct coordinate of the spaceship
+                   bulletX = playerX
+                   fire_bullet(bulletX, bulletY)
 
 
         if event.type == pygame.KEYUP:
@@ -172,6 +186,8 @@ while running:
 
         collision = isCollision(enemyX[i],enemyY[i], bulletX, bulletY )
         if collision:
+            explosion_sound = mixer.Sound("explosion.wav")
+            explosion_sound.play()
             bulletY = 480
             bullet_state = "ready"
             score_value += 1
